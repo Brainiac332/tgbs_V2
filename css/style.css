@@ -513,12 +513,12 @@ input:focus, textarea:focus{
     align-items: stretch;
     padding: 10px;
     border-radius: var(--r2);
-    background: rgba(255,255,255,.70);
+    background: rgba(255,255,255,.96);
     border: 1px solid rgba(255,255,255,.75);
     box-shadow: var(--shadow);
     display: none;
-    backdrop-filter: blur(var(--blur));
-    -webkit-backdrop-filter: blur(var(--blur));
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
   }
   .nav__menu.open{ display:flex; }
   .nav__link{ width:100%; }
@@ -871,3 +871,4 @@ input:focus, textarea:focus{
   .logo-track{ animation: none; }
   .pbox, .logo-track img{ transition: none; }
 }
+
