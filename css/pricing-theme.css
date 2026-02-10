@@ -163,3 +163,102 @@
   }
 }
 
+
+/* ===== Modern Segmented Currency Switch (TGBS Gold) ===== */
+.sr-only{
+  position:absolute !important;
+  width:1px; height:1px;
+  padding:0; margin:-1px;
+  overflow:hidden; clip:rect(0,0,0,0);
+  white-space:nowrap; border:0;
+}
+
+.currency-switch{
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  margin-top: 14px;
+}
+
+/* ===== Modern Segmented Switch w/ Sliding Thumb (TGBS Gold) ===== */
+
+.cs-seg{
+  position: relative;
+  display: inline-grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  padding: 6px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.70);
+  border: 1px solid rgba(0,0,0,.08);
+  box-shadow: 0 12px 34px rgba(0,0,0,.08);
+  overflow: hidden;
+}
+
+.cs-thumb{
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  width: calc(50% - 6px);
+  height: calc(100% - 12px);
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  box-shadow: 0 16px 40px rgba(201,162,77,.25);
+  transform: translateX(0);
+  transition: transform .22s cubic-bezier(.22,.61,.36,1);
+  z-index: 0;
+}
+
+.cs-seg[data-currency="ghs"] .cs-thumb{
+  transform: translateX(100%);
+}
+
+.cs-radio{
+  position:absolute;
+  opacity:0;
+  pointer-events:none;
+}
+
+/* Pills sit above the thumb */
+.cs-pill{
+  position: relative;
+  z-index: 1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  height: 42px;
+  min-width: 92px;
+  padding: 0 16px;
+  border-radius: 999px;
+  font-weight: 900;
+  font-size: 13px;
+  letter-spacing: .02em;
+  cursor: pointer;
+  user-select: none;
+
+  color: rgba(10,10,10,.72);
+  background: transparent;
+  transition: transform .15s ease, color .15s ease, opacity .15s ease;
+}
+
+.cs-radio:checked + .cs-pill{
+  color: rgba(10,10,10,.96);
+}
+
+.cs-pill:active{
+  transform: scale(.98);
+}
+
+@keyframes csFloat{
+  0%,100%{ transform: translateY(0) rotate(-8deg); }
+  50%{ transform: translateY(-4px) rotate(-8deg); }
+}
+@keyframes csPulse{
+  0%,100%{ transform: scale(1); opacity: .95; }
+  50%{ transform: scale(1.03); opacity: 1; }
+}
+
+@media (max-width: 520px){
+  .cs-seg{ width: 100%; }
+  .cs-pill{ min-width: 0; width: 100%; }
+}
