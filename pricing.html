@@ -273,7 +273,7 @@
 
             <button type="submit" class="btn btn-primary full btn-shine">Send on WhatsApp</button>
 
-            <div class="panel-foot">
+            <div class="panel-foot" >
               Or call: <a href="tel:+971552738118">+971 55 273 8118</a>
             </div>
           </form>
@@ -289,6 +289,32 @@
         <div class="kicker">Creative Packages</div>
         <h2>Premium Creative Packages for <span class="grad">Brands & Businesses</span></h2>
         <p class="muted">Choose a service to view Basic / Standard / Premium packages.</p>
+      <!-- Currency switch (Creative Packages only) -->
+<div class="currency-switch" id="currencySwitchWrap" aria-label="Currency switch">
+  <span class="cs-indicator" aria-hidden="true">
+    <span class="cs-arrow">↗</span>
+    <span class="cs-tip">Switch currency</span>
+  </span>
+
+  <fieldset class="cs-seg" role="group" aria-label="Creative pricing currency">
+    <legend class="sr-only">Currency</legend>
+
+    <span class="cs-thumb" aria-hidden="true"></span>
+
+
+    <input class="cs-radio" type="radio" name="currency" id="curAED" checked>
+    <label class="cs-pill" for="curAED">AED</label>
+
+    <input class="cs-radio" type="radio" name="currency" id="curGHS">
+    <label class="cs-pill" for="curGHS">₵ GHS</label>
+
+    <!-- keep your existing checkbox for logic compatibility -->
+    <input type="checkbox" id="currencyToggle" class="sr-only" aria-hidden="true">
+
+    
+  </fieldset>
+</div>
+
       </div>
 
       <div class="service-switch">
@@ -493,6 +519,259 @@
     });
   })();
 </script>
+
+<script>
+(function(){
+  // Safety: only run on pricing page where creative section exists
+  const toggle = document.getElementById("currencyToggle");
+  if (!toggle) return;
+
+  // Ghana prices from your uploaded creatives (₵)
+  const GHS = {
+    logo:       ["₵ 250–400", "₵ 450–700", "₵ 800–1200+"],
+    flyer:      ["₵ 150–250", "₵ 300–400", "₵ 450–600"],
+    brochure:   ["₵ 300–450", "₵ 500–700", "₵ 800–1200+"],
+    website:    ["₵ 700–900", "₵ 1000–1500", "₵ 1800–2500+"],
+    smm:        ["₵ 500–700 / month", "₵ 800–1000 / month", "₵ 1200–1500 / month"],
+    mockups:    ["₵ 200–300", "₵ 350–500", "Let’s Talk"],
+    businesscard:["₵ 100–150", "₵ 200–300", "₵ 350–450"],
+    video:      ["₵ 300–800", "₵ 800–1,800", "₵ 1,800–4,000+"],
+    templates:  ["₵ 50 / template", "₵ 400 / template", "₵ 1,000 / template"]
+  };
+
+  const GHS_ADDONS_TEMPLATES = [
+    "Motion Graphic Template — ₵ 80 each",
+    "Content Copywriting — ₵ 25 per caption",
+    "Logo/Brand Integration Upgrade — ₵ 20"
+  ];
+
+  // `creative`, `renderPackages` are defined in services.js (global)
+  if (typeof creative === "undefined" || typeof renderPackages !== "function") {
+    console.warn("Creative pricing data not found.");
+    return;
+  }
+
+  // Store AED once + attach GHS prices
+  creative.forEach(service => {
+    // addons
+    if (!service.__addonsAED) service.__addonsAED = (service.addons || []).slice();
+
+    // packages
+    service.packages.forEach((pkg, i) => {
+      if (!pkg.__priceAED) pkg.__priceAED = pkg.price; // original AED text
+      pkg.__priceGHS = (GHS[service.key] && GHS[service.key][i]) ? GHS[service.key][i] : pkg.__priceAED;
+    });
+  });
+
+  function applyCurrency(isGHS){
+    // Update prices
+    creative.forEach(service => {
+      service.packages.forEach(pkg => {
+        pkg.price = isGHS ? pkg.__priceGHS : pkg.__priceAED;
+      });
+
+      // Templates add-ons switch
+      if (service.key === "templates") {
+        service.addons = isGHS ? GHS_ADDONS_TEMPLATES.slice() : service.__addonsAED.slice();
+      }
+    });
+
+    // Re-render the currently selected service packages
+    renderPackages();
+
+    // Indicator hint: hide once user switches
+    const ind = document.querySelector(".cs-indicator");
+    if (ind) ind.style.display = "none";
+  }
+
+  // Default = AED
+  applyCurrency(false);
+
+  toggle.addEventListener("change", () => {
+    applyCurrency(toggle.checked);
+  });
+})();
+</script>
+
+<script>
+(function(){
+  const aed = document.getElementById("curAED");
+  const ghs = document.getElementById("curGHS");
+  const toggle = document.getElementById("currencyToggle");
+  const seg = document.querySelector(".cs-seg");
+  if(!aed || !ghs || !toggle || !seg) return;
+
+  function sync(){
+    const isGHS = !!ghs.checked;
+    seg.setAttribute("data-currency", isGHS ? "ghs" : "aed");
+
+    toggle.checked = isGHS;
+    toggle.dispatchEvent(new Event("change", { bubbles: true }));
+  }
+
+  aed.addEventListener("change", sync);
+  ghs.addEventListener("change", sync);
+
+  // initial
+  sync();
+})();
+</script>
+
+
+
+
+<script>
+(function(){
+  const toggle = document.getElementById("currencyToggle");
+  const form = document.getElementById("quoteForm");
+  const category = document.getElementById("category");
+  const companySize = document.getElementById("companySize");
+  const need = document.getElementById("need");
+
+  if(!form || !category || !need) return;
+
+  // The WhatsApp base
+  const WA_NUMBER = "971552738118";
+
+  function getCurrencyLabel(){
+    return (toggle && toggle.checked) ? "GHS (₵)" : "AED";
+  }
+
+  function updateButtonLabel(){
+    const btn = form.querySelector('button[type="submit"]');
+    if(!btn) return;
+    btn.textContent = `Send on WhatsApp (${getCurrencyLabel()})`;
+  }
+
+  // Update label on load
+  updateButtonLabel();
+
+  // If toggle exists, update label when switched
+  if(toggle){
+    toggle.addEventListener("change", updateButtonLabel);
+  }
+
+  // Intercept submit and build message
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const currency = getCurrencyLabel();
+    const cat = category.value || "N/A";
+    const size = (companySize && companySize.value) ? companySize.value : "Optional";
+    const needVal = need.value || "N/A";
+
+    const message =
+`Quick Quote — TGBS
+Currency: ${currency}
+Category: ${cat}
+Company Size (IT): ${size}
+Need: ${needVal}
+
+Sent from: Pricing Page`;
+
+    const url = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(message)}`;
+    window.open(url, "_blank", "noopener");
+  });
+})();
+</script>
+
+
+
+<script>
+(function(){
+  const WA_NUMBER = "971552738118";
+
+  function getCurrencyLabel(){
+    const toggle = document.getElementById("currencyToggle");
+    return (toggle && toggle.checked) ? "GHS (₵)" : "AED";
+  }
+
+  function getActiveCreativeServiceTitle(){
+    const activeChip = document.querySelector("#serviceChips .chip.active");
+    return activeChip ? activeChip.textContent.trim() : "Creative Service";
+  }
+
+  function openWhatsApp(msg){
+    const url = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`;
+    window.open(url, "_blank", "noopener,noreferrer");
+  }
+
+  // Intercept clicks on Creative package CTA buttons
+  document.addEventListener("click", (e) => {
+    const btn = e.target.closest("#creativePackages a.btn");
+    if (!btn) return;
+
+    // Stop the default wa.me href from services.js
+    e.preventDefault();
+
+    const card = btn.closest(".price-card");
+    if (!card) return;
+
+    const serviceTitle = getActiveCreativeServiceTitle();
+    const packageName = (card.querySelector(".price-top h3")?.textContent || "Package").trim();
+    const priceText = (card.querySelector(".amount")?.textContent || "").trim();
+    const currency = getCurrencyLabel();
+
+    const msg =
+`Hello TGBS 
+I’m interested in:
+
+Service: ${serviceTitle}
+Package: ${packageName}
+Price: ${priceText}
+Currency: ${currency}
+
+Please share next steps.`;
+
+    openWhatsApp(msg);
+  });
+
+})();
+</script>
+
+
+<script>
+(function(){
+  const WA_NUMBER = "971552738118";
+
+  function openWhatsApp(msg){
+    const url = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`;
+    window.open(url, "_blank", "noopener,noreferrer");
+  }
+
+  // Intercept clicks on IT pricing CTA buttons
+  document.addEventListener("click", (e) => {
+    const btn = e.target.closest("#pricing a.btn");
+    if (!btn) return;
+
+    const card = btn.closest(".price-card");
+    if (!card) return;
+
+    // Stop any default link behavior
+    e.preventDefault();
+
+    const tierName = (card.querySelector(".price-top h3")?.textContent || "IT Tier").trim();
+    const companySize = (card.querySelector(".price-top .muted")?.textContent || "").trim();
+    const amount = (card.querySelector(".amount")?.textContent || "Custom Quote").trim();
+    const per = (card.querySelector(".per")?.textContent || "").trim();
+
+    const msg =
+`Hello TGBS 
+I’d like to start IT Managed Services:
+
+Tier: ${tierName}
+${companySize ? `Company Size: ${companySize}` : ""}
+Price: ${amount}${per ? ` ${per}` : ""}
+Currency: AED
+
+Please share the next steps and requirements.`;
+
+    openWhatsApp(msg);
+  });
+})();
+</script>
+
+
 
 </body>
 </html>
