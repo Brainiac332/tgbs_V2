@@ -197,7 +197,7 @@
     </div>
 
     <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
-      <a href="index.html#sevices">Our Services</a>
+      <a href="index.html#services">Our Services</a>
       <a href="#creative">Creative Packages</a>
       <a href="#pricing">IT Pricing</a>
       <a href="#faq">FAQ</a>
@@ -768,6 +768,895 @@ Please share the next steps and requirements.`;
 
     openWhatsApp(msg);
   });
+})();
+</script>
+
+
+
+
+
+
+<script>
+(function(){
+  const modal = document.getElementById("brandAd");
+  if(!modal) return;
+
+  const closeEls = modal.querySelectorAll("[data-ad-close]");
+  const cards = Array.from(modal.querySelectorAll(".ad-card"));
+  const cta = document.getElementById("brandCta");
+
+  const aedRadio = document.getElementById("brandAED");
+  const ghsRadio = document.getElementById("brandGHS");
+  const seg = document.getElementById("brandCurrencySeg");
+
+  const slotsEl = document.getElementById("adSlots");
+  const cdEl = document.getElementById("adCountdown");
+
+  const isMobile = window.matchMedia("(max-width: 768px)").matches;
+
+  // WhatsApp numbers
+  const WA = { aed: "971552738118", ghs: "233200372679" };
+
+  let selectedCard = null;
+  let currency = "aed";
+
+  // --- Slots + Countdown (subtle, resets weekly) ---
+  function getWeekKey(d=new Date()){
+    // Year + ISO-ish week start key
+    const onejan = new Date(d.getFullYear(),0,1);
+    const day = Math.floor((d - onejan) / 86400000);
+    const week = Math.ceil((day + onejan.getDay()+1) / 7);
+    return `${d.getFullYear()}-W${week}`;
+  }
+
+  function seededSlots(){
+    // deterministic 4–9 slots per week (so it doesn't jump constantly)
+    const key = getWeekKey();
+    let hash = 0;
+    for (let i=0;i<key.length;i++) hash = (hash*31 + key.charCodeAt(i)) >>> 0;
+    return 4 + (hash % 6); // 4..9
+  }
+
+  function endOfWeek(){
+    const now = new Date();
+    const day = now.getDay(); // 0 Sun .. 6 Sat
+    const diffToSun = (7 - day) % 7; // days to next Sunday
+    const end = new Date(now);
+    end.setDate(now.getDate() + diffToSun);
+    end.setHours(23,59,59,999);
+    return end;
+  }
+
+  function tickCountdown(){
+    if(!cdEl) return;
+    const end = endOfWeek();
+    const ms = end - new Date();
+    if(ms <= 0){
+      cdEl.innerHTML = 'Ends in: <b>0h</b>';
+      return;
+    }
+    const totalMin = Math.floor(ms / 60000);
+    const days = Math.floor(totalMin / (60*24));
+    const hrs = Math.floor((totalMin - days*60*24) / 60);
+    const mins = totalMin % 60;
+
+    const parts = [];
+    if(days) parts.push(`${days}d`);
+    parts.push(`${hrs}h`);
+    if(days === 0) parts.push(`${mins}m`); // only show minutes when near
+    cdEl.innerHTML = `Ends in: <b>${parts.join(" ")}</b>`;
+  }
+
+  function setSlots(){
+    const n = seededSlots();
+    if(slotsEl) slotsEl.innerHTML = `Slots available this week: <b>${n}</b>`;
+  }
+
+  // --- Currency ---
+  function setCurrency(next){
+    currency = next;
+    if(seg) seg.setAttribute("data-currency", currency);
+
+    cards.forEach(btn => {
+      const priceEl = btn.querySelector("[data-price]");
+      if(!priceEl) return;
+      priceEl.textContent = (currency === "ghs") ? btn.dataset.ghs : btn.dataset.aed;
+    });
+
+    if(selectedCard && cta){
+      const tier = selectedCard.dataset.tier;
+      const price = (currency === "ghs") ? selectedCard.dataset.ghs : selectedCard.dataset.aed;
+     const short = window.matchMedia("(max-width: 768px)").matches;
+cta.textContent = short ? `Send on WhatsApp • ${tier}` : `Send ${tier} (${price}) on WhatsApp`;
+
+    }
+  }
+
+  function syncCurrency(){
+    const isGHS = !!(ghsRadio && ghsRadio.checked);
+    setCurrency(isGHS ? "ghs" : "aed");
+  }
+
+  // --- WhatsApp ---
+  function openWA(card){
+    const tier = card.dataset.tier;
+    const price = (currency === "ghs") ? card.dataset.ghs : card.dataset.aed;
+    const desc = card.dataset.desc || "";
+
+    const msg =
+`Hello TGBS 
+I’m interested in the Full Brand Elevation Package.
+
+Package: ${tier}
+Price: ${price}
+Currency: ${currency.toUpperCase()}${currency === "ghs" ? " (₵)" : ""}
+
+Notes: ${desc}
+
+Please share next steps and availability.`;
+
+    const num = WA[currency] || WA.aed;
+    window.open(`https://wa.me/${num}?text=${encodeURIComponent(msg)}`, "_blank", "noopener,noreferrer");
+  }
+
+  // --- Selection behavior ---
+  function selectCard(card){
+    cards.forEach(c => c.classList.remove("is-selected"));
+    card.classList.add("is-selected");
+    selectedCard = card;
+
+    if(cta){
+      cta.disabled = false;
+      cta.classList.add("is-ready");
+      const price = (currency === "ghs") ? card.dataset.ghs : card.dataset.aed;
+      const short = window.matchMedia("(max-width: 768px)").matches;
+cta.textContent = short ? `Send on WhatsApp • ${card.dataset.tier}` : `Send ${card.dataset.tier} (${price}) on WhatsApp`;
+
+    }
+  }
+
+  // --- Open/Close ---
+  function openModal(){
+    modal.classList.add("is-open");
+    modal.setAttribute("aria-hidden","false");
+    document.body.classList.add("menu-open"); // if you already use this to lock scroll
+    setSlots();
+    tickCountdown();
+  }
+  function closeModal(){
+    modal.classList.remove("is-open");
+    modal.setAttribute("aria-hidden","true");
+    document.body.classList.remove("menu-open");
+  }
+
+  closeEls.forEach(el => el.addEventListener("click", closeModal));
+  document.addEventListener("keydown", (e) => {
+    if(e.key === "Escape" && modal.classList.contains("is-open")) closeModal();
+  });
+
+  // Currency handlers
+  if(aedRadio) aedRadio.addEventListener("change", syncCurrency);
+  if(ghsRadio) ghsRadio.addEventListener("change", syncCurrency);
+
+  // Card click behavior
+  cards.forEach(card => {
+    card.addEventListener("click", () => {
+      // Mobile should behave like desktop: tap selects, CTA sends
+selectCard(card);
+
+    });
+  });
+
+  // Desktop CTA
+  if(cta){
+    cta.addEventListener("click", () => {
+      if(!selectedCard) return;
+      openWA(selectedCard);
+      closeModal();
+    });
+  }
+
+  // Init
+  setCurrency("aed");
+  setSlots();
+  tickCountdown();
+  setInterval(tickCountdown, 60000);
+
+  // Show on entry (as you requested)
+  window.addEventListener("load", openModal);
+})();
+</script>
+
+
+
+
+
+<!-- =========================
+     BRAND ELEVATION POPUP AD (DARK GLASS THEME) — FIXED
+     ✅ Fixes:
+     1) Popular badge no longer overlaps Tier text
+     2) X button closes popup (and backdrop + ESC also close)
+========================== -->
+
+<style>
+  /* Modal */
+  .ad-modal{ position:fixed; inset:0; z-index:99999; display:none; }
+  .ad-modal.is-open{ display:block; }
+
+  .ad-backdrop{
+    position:absolute; inset:0;
+    background: rgba(0,0,0,.55);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    animation: adFade .18s ease both;
+  }
+  @keyframes adFade{ from{opacity:0} to{opacity:1} }
+
+  /* Sheet */
+  .ad-sheet{
+    position: relative;
+    width: min(1120px, calc(100% - 28px));
+    max-height: calc(100dvh - 28px);
+    margin: 14px auto;
+    border-radius: 22px;
+    overflow: hidden;
+
+    background: linear-gradient(180deg, rgba(18,18,22,.92), rgba(10,10,12,.92));
+    border: 1px solid rgba(255,255,255,.10);
+    box-shadow: 0 30px 120px rgba(0,0,0,.55);
+
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    animation: adPop .22s cubic-bezier(.22,.61,.36,1) both;
+  }
+  @keyframes adPop{
+    from{ transform: translateY(10px) scale(.98); opacity:0 }
+    to{ transform: translateY(0) scale(1); opacity:1 }
+  }
+
+  /* Ambient blobs */
+  .ad-sheet::before{
+    content:"";
+    position:absolute; inset:-40%;
+    background:
+      radial-gradient(700px 420px at 20% 15%, rgba(168,85,247,.22), transparent 55%),
+      radial-gradient(680px 420px at 85% 25%, rgba(236,72,153,.16), transparent 60%),
+      radial-gradient(720px 480px at 55% 80%, rgba(201,162,77,.18), transparent 60%);
+    filter: blur(18px);
+    opacity: .9;
+    pointer-events:none;
+  }
+  .ad-sheet > *{ position:relative; z-index:2; }
+
+  /* Close */
+  .ad-close{
+    position:absolute; top: 14px; right: 14px;
+    width: 44px; height: 44px;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,.14);
+    background: rgba(255,255,255,.08);
+    color: rgba(255,255,255,.90);
+    font-size: 24px; font-weight: 900;
+    cursor:pointer;
+    box-shadow: 0 12px 30px rgba(0,0,0,.35);
+    z-index: 10;
+  }
+
+  /* Header */
+  .ad-head{
+    padding: 22px 22px 12px;
+    text-align:center;
+  }
+  .ad-kicker{
+    display:inline-flex;
+    align-items:center;
+    gap: 10px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,.07);
+    border: 1px solid rgba(255,255,255,.10);
+    color: rgba(246,244,255,.78);
+    font-weight: 800;
+    letter-spacing: .03em;
+    font-size: 12px;
+  }
+  .ad-title{
+    margin: 12px 0 6px;
+    font-size: clamp(20px, 2.6vw, 36px);
+    letter-spacing: .02em;
+    color: rgba(255,255,255,.95);
+  }
+  .ad-title .gold{ color: rgba(201,162,77,.95); }
+  .ad-sub{
+    margin:0;
+    color: rgba(246,244,255,.70);
+    font-weight: 650;
+  }
+  .ad-meta{
+    margin-top: 14px;
+    display:flex;
+    justify-content:center;
+    gap: 10px;
+    flex-wrap:wrap;
+  }
+  .ad-pill{
+    display:inline-flex;
+    align-items:center;
+    gap: 8px;
+    padding: 9px 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,.07);
+    border: 1px solid rgba(255,255,255,.10);
+    color: rgba(246,244,255,.78);
+    font-weight: 800;
+    box-shadow: 0 14px 36px rgba(0,0,0,.35);
+  }
+  .ad-pill b{ color: rgba(255,255,255,.92); }
+
+  /* Grid */
+  .ad-grid{
+    padding: 14px 18px 18px;
+    overflow:auto;
+    -webkit-overflow-scrolling: touch;
+    display:grid;
+    grid-template-columns: repeat(3, minmax(0,1fr));
+    gap: 14px;
+  }
+
+  /* Cards */
+  .ad-card{
+    border-radius: 22px;
+    padding: 18px 18px 16px;
+    text-align:left;
+    cursor:pointer;
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.10);
+    box-shadow: 0 18px 60px rgba(0,0,0,.40);
+    transition: transform .16s ease, border-color .16s ease, box-shadow .16s ease, background .16s ease;
+    color: rgba(255,255,255,.92);
+    position:relative;
+  }
+  .ad-card:hover{ transform: translateY(-2px); }
+  .ad-card.is-selected{
+    border-color: rgba(201,162,77,.55);
+    box-shadow: 0 24px 80px rgba(0,0,0,.55), 0 0 0 1px rgba(201,162,77,.25) inset;
+    background: rgba(255,255,255,.075);
+  }
+
+  /* Featured middle card */
+  .ad-card.popular{
+    border-color: rgba(201,162,77,.35);
+    box-shadow: 0 26px 90px rgba(0,0,0,.58);
+  }
+
+  /* ✅ FIX: reserve space so badge never overlaps Tier text */
+  .ad-card.popular{ padding-top: 58px; } /* was 18px */
+  .ad-card.popular .ad-top{ margin-top: 0; } /* neutralize any push */
+
+  .ad-badge{
+    position:absolute;
+    top: 14px; left: 14px;
+    z-index: 5;
+    pointer-events: none;
+    padding: 7px 12px;
+    border-radius: 999px;
+    font-weight: 900;
+    font-size: 11px;
+    letter-spacing: .04em;
+    color: rgba(15,15,18,.95);
+    background: linear-gradient(90deg, rgba(201,162,77,1), rgba(236,72,153,.80));
+    box-shadow: 0 14px 34px rgba(201,162,77,.22);
+  }
+
+  .ad-top{
+    display:flex;
+    justify-content: space-between;
+    align-items:flex-start;
+    gap: 10px;
+    margin-top: 6px;
+  }
+  .ad-tier{
+    font-weight: 950;
+    font-size: 18px;
+    letter-spacing: .01em;
+  }
+  .ad-price{
+    font-weight: 950;
+    font-size: 18px;
+    color: rgba(255,255,255,.95);
+    white-space: nowrap;
+  }
+
+  .ad-desc{
+    margin: 10px 0 10px;
+    color: rgba(246,244,255,.70);
+    font-weight: 650;
+    line-height: 1.35;
+  }
+
+  .ad-list{
+    margin: 0;
+    padding-left: 18px;
+    color: rgba(246,244,255,.78);
+    font-weight: 650;
+    line-height: 1.4;
+  }
+  .ad-list li{ margin: 7px 0; }
+
+  .ad-foot{
+    margin-top: 14px;
+    display:flex;
+    justify-content: space-between;
+    gap: 12px;
+    color: rgba(246,244,255,.68);
+    font-weight: 800;
+    font-size: 12px;
+    border-top: 1px solid rgba(255,255,255,.08);
+    padding-top: 12px;
+  }
+
+  /* Bottom CTA bar */
+  .ad-actions{
+    padding: 14px 16px 16px;
+    border-top: 1px solid rgba(255,255,255,.10);
+    background: rgba(12,12,15,.72);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
+    display:grid;
+    grid-template-columns: 1fr auto;
+    gap: 12px;
+    align-items: center;
+  }
+
+  /* Tap-to-claim hint */
+  .ad-mobilehint{
+    grid-column: 1 / -1;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 999px;
+    background: rgba(255,255,255,.07);
+    border: 1px solid rgba(255,255,255,.10);
+    color: rgba(246,244,255,.78);
+    font-weight: 850;
+    font-size: 12px;
+  }
+  .tap-dot{
+    width: 10px; height: 10px;
+    border-radius: 999px;
+    background: rgba(201,162,77,1);
+    box-shadow: 0 0 0 0 rgba(201,162,77,.55);
+    animation: tapPulse 1.35s ease-in-out infinite;
+  }
+  @keyframes tapPulse{
+    0%{ box-shadow: 0 0 0 0 rgba(201,162,77,.55); transform: translateY(0); }
+    60%{ box-shadow: 0 0 0 14px rgba(201,162,77,0); transform: translateY(-1px); }
+    100%{ box-shadow: 0 0 0 0 rgba(201,162,77,0); transform: translateY(0); }
+  }
+
+  /* CTA */
+  .ad-cta{
+    height: 54px;
+    border-radius: 18px;
+    border: 1px solid rgba(255,255,255,.12);
+    background: rgba(255,255,255,.08);
+    color: rgba(255,255,255,.92);
+    font-weight: 950;
+    cursor:pointer;
+    width: 100%;
+  }
+  .ad-cta:disabled{ opacity:.55; cursor:not-allowed; }
+  .ad-cta.is-ready{
+    background: linear-gradient(90deg, rgba(201,162,77,1), rgba(201,162,77,.78));
+    color: rgba(10,10,12,.95);
+    border-color: rgba(201,162,77,.55);
+    box-shadow: 0 18px 60px rgba(201,162,77,.18);
+  }
+
+  /* Currency */
+  .ad-currency{
+    display:grid;
+    gap: 8px;
+    justify-items: end;
+  }
+  .ad-currency-label{
+    font-weight: 900;
+    font-size: 12px;
+    color: rgba(246,244,255,.70);
+    letter-spacing: .02em;
+  }
+
+  .ad-cs{
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.10);
+    border-radius: 999px;
+    padding: 6px;
+    display:flex;
+    gap: 6px;
+    align-items:center;
+    width: max-content;
+    position: relative;
+  }
+  .ad-cs .cs-radio{ position:absolute; opacity:0; pointer-events:none; }
+  .ad-cs .cs-pill{
+    height: 42px;
+    min-width: 92px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius: 999px;
+    font-weight: 950;
+    color: rgba(246,244,255,.78);
+    cursor:pointer;
+    position: relative;
+    z-index: 2;
+    padding: 0 14px;
+  }
+  .ad-cs .cs-thumb{
+    position:absolute;
+    top: 6px; bottom: 6px;
+    width: calc(50% - 6px);
+    border-radius: 999px;
+    background: rgba(201,162,77,.95);
+    box-shadow: 0 14px 40px rgba(201,162,77,.16);
+    transform: translateX(0%);
+    transition: transform .18s ease;
+    z-index: 1;
+  }
+  .ad-cs[data-currency="ghs"] .cs-thumb{ transform: translateX(100%); }
+  .ad-cs[data-currency="aed"] label[for="brandAED"],
+  .ad-cs[data-currency="ghs"] label[for="brandGHS"]{
+    color: rgba(10,10,12,.95);
+  }
+
+  /* Mobile */
+  @media (max-width: 768px){
+    .ad-sheet{
+      width: calc(100% - 18px);
+      margin: 9px auto;
+      max-height: calc(100dvh - 18px);
+      border-radius: 20px;
+    }
+    .ad-head{ padding: 16px 14px 10px; }
+    .ad-title{ font-size: 20px; }
+
+    .ad-grid{
+      grid-template-columns: 1fr;
+      gap: 12px;
+      padding: 12px 12px 14px;
+      scroll-snap-type: y proximity;
+    }
+    .ad-card{ scroll-snap-align: start; }
+
+    .ad-actions{
+      grid-template-columns: 1fr;
+      gap: 10px;
+      padding: 12px 12px 12px;
+      position: sticky;
+      bottom: 0;
+    }
+    .ad-mobilehint{ display:flex; }
+
+    .ad-currency{ justify-items: stretch; }
+    .ad-cs{ width:100%; }
+    .ad-cs .cs-pill{ flex: 1 1 50%; min-width: 0; }
+
+    .ad-cta{ height: 50px; }
+  }
+</style>
+
+<div class="ad-modal" id="brandAd" aria-hidden="true">
+  <div class="ad-backdrop" data-ad-close></div>
+
+  <div class="ad-sheet" role="dialog" aria-modal="true" aria-label="Full Brand Elevation Packages">
+    <!-- ✅ FIX: data-ad-close is present -->
+    <button class="ad-close" type="button" aria-label="Close" data-ad-close>×</button>
+
+    <header class="ad-head">
+      <div class="ad-kicker">LIMITED SLOTS • BRAND ELEVATION</div>
+      <h2 class="ad-title">Full Brand Elevation. <span class="gold">No Surprises.</span></h2>
+      <p class="ad-sub">Transform your brand from visual to visibility.</p>
+
+      <div class="ad-meta" aria-live="polite">
+        <span class="ad-pill" id="adSlots">Slots available this week: <b>—</b></span>
+        <span class="ad-pill" id="adCountdown">Ends in: <b>—</b></span>
+      </div>
+    </header>
+
+    <div class="ad-grid" id="brandGrid">
+      <!-- BASIC -->
+      <button class="ad-card" type="button"
+        data-tier="Basic Package"
+        data-aed="AED 1,500"
+        data-ghs="₵ 1,500"
+        data-desc="Perfect for startups or small businesses that want a solid brand foundation.">
+        <div class="ad-top">
+          <div class="ad-tier">Tier 1</div>
+          <div class="ad-price" data-price>AED 1,500</div>
+        </div>
+
+        <div class="ad-desc">
+          Perfect for startups or small businesses that want a solid brand foundation.
+        </div>
+
+        <div style="font-weight:900; opacity:.9; margin: 6px 0 10px;">Includes:</div>
+        <ul class="ad-list">
+          <li>Logo Design (2–3 concepts + final files)</li>
+          <li>Brand Color Palette & Typography Guide</li>
+          <li>1 Product Mockup (simple presentation)</li>
+          <li>1 Flier / Poster Design</li>
+          <li>Social Media Setup (bio, covers, profile)</li>
+          <li>Basic One-Page Website (showcase only)</li>
+        </ul>
+
+        <div class="ad-foot">
+          <span>Revision 1</span>
+          <span>Delivery: 10–14 days</span>
+        </div>
+      </button>
+
+      <!-- STANDARD (POPULAR) -->
+      <button class="ad-card popular" type="button"
+        data-tier="Standard Package"
+        data-aed="AED 2,200"
+        data-ghs="₵ 2,200"
+        data-desc="Perfect for growing brands that need consistency and presence across platforms.">
+        <span class="ad-badge">MOST POPULAR</span>
+
+        <div class="ad-top">
+          <div class="ad-tier">Tier 2</div>
+          <div class="ad-price" data-price>AED 2,200</div>
+        </div>
+
+        <div class="ad-desc">
+          Perfect for growing brands that need consistency and presence across platforms.
+        </div>
+
+        <div style="font-weight:900; opacity:.9; margin: 6px 0 10px;">Includes:</div>
+        <ul class="ad-list">
+          <li>Logo + Brand Guide (tone & usage rules)</li>
+          <li>Product Mockups (2–3 products)</li>
+          <li>3 Marketing Fliers / Posters</li>
+          <li>Social Media Optimization (bio, feed, plan)</li>
+          <li>3-Page Website (Home, About, Products/Services)</li>
+          <li>Basic SEO Optimization</li>
+        </ul>
+
+        <div class="ad-foot">
+          <span>Revision 2</span>
+          <span>Delivery: 14–21 days</span>
+        </div>
+      </button>
+
+      <!-- PREMIUM -->
+      <button class="ad-card" type="button"
+        data-tier="Premium Package"
+        data-aed="AED 3,000+"
+        data-ghs="₵ 3,000+"
+        data-desc="Perfect for businesses ready to dominate online with a complete digital system.">
+        <div class="ad-top">
+          <div class="ad-tier">Tier 3</div>
+          <div class="ad-price" data-price>AED 3,000+</div>
+        </div>
+
+        <div class="ad-desc">
+          Perfect for businesses ready to dominate online with a complete digital system.
+        </div>
+
+        <div style="font-weight:900; opacity:.9; margin: 6px 0 10px;">Includes:</div>
+        <ul class="ad-list">
+          <li>Advanced Brand Identity (logo system + brand book)</li>
+          <li>Product Mockups (3D scenes + packaging set)</li>
+          <li>5–7 Custom Fliers / Campaign Graphics</li>
+          <li>Social Media Management (1 month)</li>
+          <li>5-Page Website (booking/products/contact)</li>
+          <li>Full SEO Setup + Analytics Integration</li>
+        </ul>
+
+        <div class="ad-foot">
+          <span>Priority Support + 3 Revision Rounds</span>
+          <span>Delivery: 21–30 days</span>
+        </div>
+      </button>
+    </div>
+
+    <div class="ad-actions">
+      <div class="ad-mobilehint">
+        <span class="tap-dot"></span> Tap a package to claim • then hit Send on WhatsApp
+      </div>
+
+      <button class="ad-cta" id="brandCta" type="button" disabled>
+        Select a package to continue
+      </button>
+
+      <div class="ad-currency">
+        <div class="ad-currency-label">Currency</div>
+
+        <div class="ad-cs" id="brandCurrencySeg" data-currency="aed" role="group" aria-label="Brand package currency">
+          <span class="cs-thumb" aria-hidden="true"></span>
+
+          <input class="cs-radio" type="radio" name="brandCurrency" id="brandAED" checked>
+          <label class="cs-pill" for="brandAED">AED</label>
+
+          <input class="cs-radio" type="radio" name="brandCurrency" id="brandGHS">
+          <label class="cs-pill" for="brandGHS">₵ GHS</label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const modal = document.getElementById("brandAd");
+  if(!modal) return;
+
+  const closeEls = modal.querySelectorAll("[data-ad-close]");
+  const cards = Array.from(modal.querySelectorAll(".ad-card"));
+  const cta = document.getElementById("brandCta");
+
+  const aedRadio = document.getElementById("brandAED");
+  const ghsRadio = document.getElementById("brandGHS");
+  const seg = document.getElementById("brandCurrencySeg");
+
+  const slotsEl = document.getElementById("adSlots");
+  const cdEl = document.getElementById("adCountdown");
+
+  // WhatsApp numbers
+  const WA = { aed: "971552738118", ghs: "233200372679" };
+
+  let selectedCard = null;
+  let currency = "aed";
+
+  /* ---------- Open/Close ---------- */
+  function openModal(){
+    modal.classList.add("is-open");
+    modal.setAttribute("aria-hidden","false");
+    document.body.classList.add("menu-open");
+    setSlots();
+    tickCountdown();
+  }
+  function closeModal(){
+    modal.classList.remove("is-open");
+    modal.setAttribute("aria-hidden","true");
+    document.body.classList.remove("menu-open");
+  }
+
+  // ✅ Close: X + backdrop (anything with data-ad-close)
+  closeEls.forEach(el => el.addEventListener("click", closeModal));
+
+  // ESC closes
+  document.addEventListener("keydown", (e) => {
+    if(e.key === "Escape" && modal.classList.contains("is-open")) closeModal();
+  });
+
+  /* ---------- Slots + Countdown (weekly) ---------- */
+  function getWeekKey(d=new Date()){
+    const onejan = new Date(d.getFullYear(),0,1);
+    const day = Math.floor((d - onejan) / 86400000);
+    const week = Math.ceil((day + onejan.getDay()+1) / 7);
+    return `${d.getFullYear()}-W${week}`;
+  }
+  function seededSlots(){
+    const key = getWeekKey();
+    let hash = 0;
+    for (let i=0;i<key.length;i++) hash = (hash*31 + key.charCodeAt(i)) >>> 0;
+    return 4 + (hash % 6); // 4..9
+  }
+  function endOfWeek(){
+    const now = new Date();
+    const day = now.getDay(); // 0 Sun..6 Sat
+    const diffToSun = (7 - day) % 7;
+    const end = new Date(now);
+    end.setDate(now.getDate() + diffToSun);
+    end.setHours(23,59,59,999);
+    return end;
+  }
+  function setSlots(){
+    const n = seededSlots();
+    if(slotsEl) slotsEl.innerHTML = `Slots available this week: <b>${n}</b>`;
+  }
+  function tickCountdown(){
+    if(!cdEl) return;
+    const end = endOfWeek();
+    const ms = end - new Date();
+    if(ms <= 0){ cdEl.innerHTML = 'Ends in: <b>0h</b>'; return; }
+
+    const totalMin = Math.floor(ms / 60000);
+    const days = Math.floor(totalMin / (60*24));
+    const hrs = Math.floor((totalMin - days*60*24) / 60);
+    const mins = totalMin % 60;
+
+    const parts = [];
+    if(days) parts.push(`${days}d`);
+    parts.push(`${hrs}h`);
+    if(days === 0) parts.push(`${mins}m`);
+    cdEl.innerHTML = `Ends in: <b>${parts.join(" ")}</b>`;
+  }
+
+  /* ---------- Currency ---------- */
+  function setCurrency(next){
+    currency = next;
+    if(seg) seg.setAttribute("data-currency", currency);
+
+    cards.forEach(btn => {
+      const priceEl = btn.querySelector("[data-price]");
+      if(!priceEl) return;
+      priceEl.textContent = (currency === "ghs") ? btn.dataset.ghs : btn.dataset.aed;
+    });
+
+    if(selectedCard && cta){
+      const tier = selectedCard.dataset.tier;
+      const price = (currency === "ghs") ? selectedCard.dataset.ghs : selectedCard.dataset.aed;
+      cta.textContent = `Send ${tier} (${price}) on WhatsApp`;
+    }
+  }
+  function syncCurrency(){
+    const isGHS = !!(ghsRadio && ghsRadio.checked);
+    setCurrency(isGHS ? "ghs" : "aed");
+  }
+
+  if(aedRadio) aedRadio.addEventListener("change", syncCurrency);
+  if(ghsRadio) ghsRadio.addEventListener("change", syncCurrency);
+
+  /* ---------- WhatsApp ---------- */
+  function openWA(card){
+    const tier = card.dataset.tier;
+    const price = (currency === "ghs") ? card.dataset.ghs : card.dataset.aed;
+    const desc = card.dataset.desc || "";
+
+    const msg =
+`Hello TGBS
+I’m interested in the Full Brand Elevation Package.
+
+Package: ${tier}
+Price: ${price}
+Currency: ${currency.toUpperCase()}${currency === "ghs" ? " (₵)" : ""}
+
+Notes: ${desc}
+
+Please share next steps and availability.`;
+
+    const num = WA[currency] || WA.aed;
+    window.open(`https://wa.me/${num}?text=${encodeURIComponent(msg)}`, "_blank", "noopener,noreferrer");
+  }
+
+  /* ---------- Selection ---------- */
+  function selectCard(card){
+    cards.forEach(c => c.classList.remove("is-selected"));
+    card.classList.add("is-selected");
+    selectedCard = card;
+
+    if(cta){
+      cta.disabled = false;
+      cta.classList.add("is-ready");
+      const price = (currency === "ghs") ? card.dataset.ghs : card.dataset.aed;
+      cta.textContent = `Send ${card.dataset.tier} (${price}) on WhatsApp`;
+    }
+  }
+
+  // Card click: same on desktop + mobile (select first, then CTA sends)
+  cards.forEach(card => card.addEventListener("click", () => selectCard(card)));
+
+  if(cta){
+    cta.addEventListener("click", () => {
+      if(!selectedCard) return;
+      openWA(selectedCard);
+      closeModal();
+    });
+  }
+
+  // Init
+  setCurrency("aed");
+  setSlots();
+  tickCountdown();
+  setInterval(tickCountdown, 60000);
+
+  // Show on entry
+  window.addEventListener("load", openModal);
 })();
 </script>
 
