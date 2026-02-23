@@ -1,40 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset
-  xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">
+  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
   <url>
     <loc>https://thegoldenbrainservices.com/</loc>
-    <lastmod>2026-02-08</lastmod>
+    <lastmod>2026-02-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
 
   <url>
-    <loc>https://thegoldenbrainservices.com/services</loc>
-    <lastmod>2026-02-08</lastmod>
+    <loc>https://thegoldenbrainservices.com/portfolio.html</loc>
+    <lastmod>2026-02-23</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.7</priority>
   </url>
 
-  <url>
-    <loc>https://thegoldenbrainservices.com/pricing</loc>
-    <lastmod>2026-02-08</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <url>
-    <loc>https://thegoldenbrainservices.com/portfolio</loc>
-    <lastmod>2026-02-08</lastmod>
+    <url>
+    <loc>https://thegoldenbrainservices.com/pricing.html</loc>
+    <lastmod>2026-02-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
-
+  
+  <!-- Optional but HIGHLY recommended: team profile pages -->
   <url>
-    <loc>https://thegoldenbrainservices.com/contact</loc>
-    <lastmod>2026-02-08</lastmod>
+    <loc>https://thegoldenbrainservices.com/team/fakhrideen</loc>
+    <lastmod>2026-02-23</lastmod>
     <changefreq>yearly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://thegoldenbrainservices.com/team/owusu-jaffar</loc>
+    <lastmod>2026-02-23</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://thegoldenbrainservices.com/team/omar-alaa-ibrahim</loc>
+    <lastmod>2026-02-23</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://thegoldenbrainservices.com/team/acheampong-nurideen</loc>
+    <lastmod>2026-02-23</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://thegoldenbrainservices.com/team/mohamed-sahl</loc>
+    <lastmod>2026-02-23</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://thegoldenbrainservices.com/team/khamdam-mohammed</loc>
+    <lastmod>2026-02-23</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
   </url>
 
 </urlset>
