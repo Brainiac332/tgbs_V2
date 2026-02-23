@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+
+  <!-- Homepage includes team images -->
+  <url>
+    <loc>https://thegoldenbrainservices.com/</loc>
+
+    <image:image>
+      <image:loc>https://thegoldenbrainservices.com/assets/team/fakhrideen-iddrisu-boakye.jpg</image:loc>
+      <image:caption>Fakhrideen Iddrisu Boakye — Founder & Creative Director, TGBS</image:caption>
+      <image:title>Fakhrideen Iddrisu Boakye | TGBS</image:title>
+    </image:image>
+
+    <image:image>
+      <image:loc>https://thegoldenbrainservices.com/assets/team/owusu-jaffar.jpg</image:loc>
+      <image:caption>Owusu Jaffar — Lead Web Developer, TGBS</image:caption>
+      <image:title>Owusu Jaffar | TGBS</image:title>
+    </image:image>
+
+    <image:image>
+      <image:loc>https://thegoldenbrainservices.com/assets/team/omar-alaa-ibrahim.jpg</image:loc>
+      <image:caption>Omar Alaa Ibrahim — Head of Social Media & Content, TGBS</image:caption>
+      <image:title>Omar Alaa Ibrahim | TGBS</image:title>
+    </image:image>
+
+    <image:image>
+      <image:loc>https://thegoldenbrainservices.com/assets/team/acheampong-nurideen.jpg</image:loc>
+      <image:caption>Acheampong Nurideen — Project Manager, TGBS</image:caption>
+      <image:title>Acheampong Nurideen | TGBS</image:title>
+    </image:image>
+
+    <image:image>
+      <image:loc>https://thegoldenbrainservices.com/assets/team/mohamed-sahl.jpg</image:loc>
+      <image:caption>Mohamed Sahl — IT Consultant, TGBS</image:caption>
+      <image:title>Mohamed Sahl | TGBS</image:title>
+    </image:image>
+
+    <image:image>
+      <image:loc>https://thegoldenbrainservices.com/assets/team/khamdam-mohammed-mirzo-bobur.jpg</image:loc>
+      <image:caption>Khamdam Mohammed Mirzo Bobur — General Manager, TGBS</image:caption>
+      <image:title>Khamdam Mohammed Mirzo Bobur | TGBS</image:title>
+    </image:image>
+  </url>
+
+</urlset>
