@@ -33,7 +33,7 @@
 <meta property="og:url" content="https://thegoldenbrainservices.com/" />
 <meta property="og:image" content="assets/og-cover.jpg" />
 <meta property="og:image:alt" content="TGBS — White & Gold Trust-first Digital Services" />
-
+<meta name="robots" content="index,follow,max-image-preview:large" />
   
 
 <!-- Twitter -->
@@ -170,16 +170,58 @@
   "@type":"ItemList",
   "name":"TGBS Team",
   "itemListElement":[
-    {"@type":"Person","name":"Fakhrideen Iddrisu Boakye","jobTitle":"Founder & Creative Director","url":"https://thegoldenbrainservices.com/portfolio","worksFor":{"@type":"Organization","name":"The Golden Brain Services (TGBS)"}},
-    {"@type":"Person","name":"Owusu Jaffar","jobTitle":"Lead Web Developer","worksFor":{"@type":"Organization","name":"The Golden Brain Services (TGBS)"}},
-    {"@type":"Person","name":"Omar Alaa Ibrahim","jobTitle":"Head of Social Media & Content","worksFor":{"@type":"Organization","name":"The Golden Brain Services (TGBS)"}},
-    {"@type":"Person","name":"Acheampong Nurideen","jobTitle":"Project Manager","worksFor":{"@type":"Organization","name":"The Golden Brain Services (TGBS)"}},
-    {"@type":"Person","name":"Mohamed Sahl","jobTitle":"IT Consultant","worksFor":{"@type":"Organization","name":"The Golden Brain Services (TGBS)"}},
-    {"@type":"Person","name":"Khamdam Mohammed Mirzo Bobur","jobTitle":"General Manager","worksFor":{"@type":"Organization","name":"The Golden Brain Services (TGBS)"}}
+    {
+      "@type":"Person",
+      "name":"Fakhrideen Iddrisu Boakye",
+      "jobTitle":"Founder & Creative Director",
+      "url":"https://thegoldenbrainservices.com/team/fakhrideen",
+      "image":"https://thegoldenbrainservices.com/assets/team/fakhrideen-iddrisu.jpg",
+      "worksFor":{"@type":"Organization","name":"The Golden Brain Services (TGBS)"},
+      "sameAs":["https://www.instagram.com/tgbs25/"]
+    },
+    {
+      "@type":"Person",
+      "name":"Owusu Jaffar",
+      "jobTitle":"Lead Web Developer",
+      "url":"https://thegoldenbrainservices.com/team/owusu-jaffar",
+      "image":"https://thegoldenbrainservices.com/assets/team/owusu-jaffar.jpg",
+      "worksFor":{"@type":"Organization","name":"The Golden Brain Services (TGBS)"}
+    },
+    {
+      "@type":"Person",
+      "name":"Omar Alaa Ibrahim",
+      "jobTitle":"Head of Social Media & Content",
+      "url":"https://thegoldenbrainservices.com/team/omar-alaa-ibrahim",
+      "image":"https://thegoldenbrainservices.com/assets/team/omar-alaa-ibrahim.jpg",
+      "worksFor":{"@type":"Organization","name":"The Golden Brain Services (TGBS)"}
+    },
+    {
+      "@type":"Person",
+      "name":"Acheampong Nurideen",
+      "jobTitle":"Project Manager",
+      "url":"https://thegoldenbrainservices.com/team/acheampong-nurideen",
+      "image":"https://thegoldenbrainservices.com/assets/team/acheampong-nurideen.jpg",
+      "worksFor":{"@type":"Organization","name":"The Golden Brain Services (TGBS)"}
+    },
+    {
+      "@type":"Person",
+      "name":"Mohamed Sahl",
+      "jobTitle":"IT Consultant",
+      "url":"https://thegoldenbrainservices.com/team/mohamed-sahl",
+      "image":"https://thegoldenbrainservices.com/assets/team/mohamed-sahl.jpg",
+      "worksFor":{"@type":"Organization","name":"The Golden Brain Services (TGBS)"}
+    },
+    {
+      "@type":"Person",
+      "name":"Khamdam Mohammed Mirzo Bobur",
+      "jobTitle":"General Manager",
+      "url":"https://thegoldenbrainservices.com/team/khamdam-mohammed",
+      "image":"https://thegoldenbrainservices.com/assets/team/khamdam-mohammed.jpg",
+      "worksFor":{"@type":"Organization","name":"The Golden Brain Services (TGBS)"}
+    }
   ]
 }
 </script>
-
 
 </head>
 
@@ -423,8 +465,8 @@
       </div>
     </section>
 
-    <!-- TEAM -->
-   <section class="section section--soft" id="team" aria-labelledby="teamTitle">
+   <!-- TEAM -->
+<section class="section section--soft" id="team" aria-labelledby="teamTitle">
   <div class="container">
     <header class="section__head reveal">
       <h2 class="h2" id="teamTitle">Meet The <span class="gold">Golden Team</span></h2>
@@ -432,18 +474,27 @@
     </header>
 
     <div class="teamgrid">
+
       <!-- Founder -->
       <article class="tcard glass reveal" itemscope itemtype="https://schema.org/Person">
-        <img class="tcard__img" src="assets/Fakhrideen.JPG"
-             alt="Fakhrideen Iddrisu Boakye — Founder & Creative Director at TGBS"
-             loading="lazy" width="640" height="640" itemprop="image"  decoding="async" />
+        <!-- Suggested: rename file to /assets/team/fakhrideen-iddrisu-boakye.jpg -->
+        <img class="tcard__img"
+             src="/assets/team/fakhrideen-iddrisu-boakye.jpg"
+             alt="Fakhrideen Iddrisu Boakye, Founder & Creative Director at TGBS (The Golden Brain Services)"
+             loading="lazy" decoding="async" width="640" height="640"
+             itemprop="image" />
+
         <div class="tcard__base">
           <h3 class="h3" itemprop="name">Fakhrideen Iddrisu Boakye</h3>
           <p class="muted" itemprop="jobTitle">Founder &amp; Creative Director</p>
+
+          <!-- Optional but helpful for Google: a stable profile URL -->
+          <link itemprop="url" href="https://thegoldenbrainservices.com/team/fakhrideen" />
+          <link itemprop="worksFor" href="https://thegoldenbrainservices.com/" />
         </div>
 
         <div class="tcard__hover" aria-hidden="true">
-          <p class="tcard__desc">
+          <p class="tcard__desc" itemprop="description">
             Leads brand strategy, creative direction, and client success — ensuring every delivery feels premium and trustworthy.
           </p>
           <a class="btn btn--primary tcard__btn"
@@ -452,96 +503,134 @@
             View Portfolio
           </a>
         </div>
+
+        <!-- Stronger image semantics -->
+        <meta itemprop="image" content="https://thegoldenbrainservices.com/assets/team/fakhrideen-iddrisu-boakye.jpg" />
       </article>
 
       <!-- Lead Web Developer -->
       <article class="tcard glass reveal" itemscope itemtype="https://schema.org/Person">
-        <img class="tcard__img" src="assets/8.png"
-             alt="Owusu Jaffar — Lead Web Developer at TGBS"
-             loading="lazy" width="640" height="640" itemprop="image"  decoding="async" />
+        <img class="tcard__img"
+             src="/assets/team/owusu-jaffar.jpg"
+             alt="Owusu Jaffar, Lead Web Developer at TGBS (The Golden Brain Services)"
+             loading="lazy" decoding="async" width="640" height="640"
+             itemprop="image" />
+
         <div class="tcard__base">
           <h3 class="h3" itemprop="name">Owusu Jaffar</h3>
           <p class="muted" itemprop="jobTitle">Lead Web Developer</p>
+          <link itemprop="url" href="https://thegoldenbrainservices.com/team/owusu-jaffar" />
+          <link itemprop="worksFor" href="https://thegoldenbrainservices.com/" />
         </div>
 
         <div class="tcard__hover" aria-hidden="true">
-          <p class="tcard__desc">
+          <p class="tcard__desc" itemprop="description">
             Builds responsive, fast websites and systems with clean UI and strong technical foundations.
           </p>
         </div>
+
+        <meta itemprop="image" content="https://thegoldenbrainservices.com/assets/team/owusu-jaffar.jpg" />
       </article>
 
       <!-- Head of Social Media & Content -->
       <article class="tcard glass reveal" itemscope itemtype="https://schema.org/Person">
-        <img class="tcard__img" src="assets/Omar Alaa Ibrahim.png"
-             alt="Omar Alaa Ibrahim — Head of Social Media & Content at TGBS"
-             loading="lazy" width="640" height="640" itemprop="image"  decoding="async" />
+        <img class="tcard__img"
+             src="/assets/team/omar-alaa-ibrahim.jpg"
+             alt="Omar Alaa Ibrahim, Head of Social Media and Content at TGBS (The Golden Brain Services)"
+             loading="lazy" decoding="async" width="640" height="640"
+             itemprop="image" />
+
         <div class="tcard__base">
           <h3 class="h3" itemprop="name">Omar Alaa Ibrahim</h3>
           <p class="muted" itemprop="jobTitle">Head of Social Media &amp; Content</p>
+          <link itemprop="url" href="https://thegoldenbrainservices.com/team/omar-alaa-ibrahim" />
+          <link itemprop="worksFor" href="https://thegoldenbrainservices.com/" />
         </div>
 
         <div class="tcard__hover" aria-hidden="true">
-          <p class="tcard__desc">
+          <p class="tcard__desc" itemprop="description">
             Owns content planning, execution, and platform growth — turning attention into qualified inquiries.
           </p>
         </div>
+
+        <meta itemprop="image" content="https://thegoldenbrainservices.com/assets/team/omar-alaa-ibrahim.jpg" />
       </article>
 
       <!-- Project Manager -->
       <article class="tcard glass reveal" itemscope itemtype="https://schema.org/Person">
-        <img class="tcard__img" src="assets/5.png"
-             alt="Acheampong Nurideen — Project Manager at TGBS"
-             loading="lazy" width="640" height="640" itemprop="image"  decoding="async" />
+        <img class="tcard__img"
+             src="/assets/team/acheampong-nurideen.jpg"
+             alt="Acheampong Nurideen, Project Manager at TGBS (The Golden Brain Services)"
+             loading="lazy" decoding="async" width="640" height="640"
+             itemprop="image" />
+
         <div class="tcard__base">
           <h3 class="h3" itemprop="name">Acheampong Nurideen</h3>
           <p class="muted" itemprop="jobTitle">Project Manager</p>
+          <link itemprop="url" href="https://thegoldenbrainservices.com/team/acheampong-nurideen" />
+          <link itemprop="worksFor" href="https://thegoldenbrainservices.com/" />
         </div>
 
         <div class="tcard__hover" aria-hidden="true">
-          <p class="tcard__desc">
+          <p class="tcard__desc" itemprop="description">
             Keeps projects on track with timelines, updates, and structured communication from start to finish.
           </p>
         </div>
+
+        <meta itemprop="image" content="https://thegoldenbrainservices.com/assets/team/acheampong-nurideen.jpg" />
       </article>
 
       <!-- IT Consultant -->
       <article class="tcard glass reveal" itemscope itemtype="https://schema.org/Person">
-        <img class="tcard__img" src="assets/mohamed sahl.jpg"
-             alt="Mohamed Sahl — IT Consultant at TGBS"
-             loading="lazy" width="640" height="640" itemprop="image"  decoding="async" />
+        <img class="tcard__img"
+             src="/assets/team/mohamed-sahl.jpg"
+             alt="Mohamed Sahl, IT Consultant at TGBS (The Golden Brain Services)"
+             loading="lazy" decoding="async" width="640" height="640"
+             itemprop="image" />
+
         <div class="tcard__base">
           <h3 class="h3" itemprop="name">Mohamed Sahl</h3>
           <p class="muted" itemprop="jobTitle">IT Consultant</p>
+          <link itemprop="url" href="https://thegoldenbrainservices.com/team/mohamed-sahl" />
+          <link itemprop="worksFor" href="https://thegoldenbrainservices.com/" />
         </div>
 
         <div class="tcard__hover" aria-hidden="true">
-          <p class="tcard__desc">
+          <p class="tcard__desc" itemprop="description">
             Supports IT planning, stability, and optimization — helping businesses stay secure and reliable.
           </p>
         </div>
+
+        <meta itemprop="image" content="https://thegoldenbrainservices.com/assets/team/mohamed-sahl.jpg" />
       </article>
 
       <!-- General Manager -->
       <article class="tcard glass reveal" itemscope itemtype="https://schema.org/Person">
-        <img class="tcard__img" src="assets/7.png"
-             alt="Khamdam Mohammed Mirzo Bobur — General Manager at TGBS"
-             loading="lazy" width="640" height="640" itemprop="image"  decoding="async" />
+        <img class="tcard__img"
+             src="/assets/team/khamdam-mohammed-mirzo-bobur.jpg"
+             alt="Khamdam Mohammed Mirzo Bobur, General Manager at TGBS (The Golden Brain Services)"
+             loading="lazy" decoding="async" width="640" height="640"
+             itemprop="image" />
+
         <div class="tcard__base">
           <h3 class="h3" itemprop="name">Khamdam Mohammed Mirzo Bobur</h3>
           <p class="muted" itemprop="jobTitle">General Manager</p>
+          <link itemprop="url" href="https://thegoldenbrainservices.com/team/khamdam-mohammed" />
+          <link itemprop="worksFor" href="https://thegoldenbrainservices.com/" />
         </div>
 
         <div class="tcard__hover" aria-hidden="true">
-          <p class="tcard__desc">
+          <p class="tcard__desc" itemprop="description">
             Oversees operations and delivery standards — ensuring quality control and smooth client experience.
           </p>
         </div>
+
+        <meta itemprop="image" content="https://thegoldenbrainservices.com/assets/team/khamdam-mohammed-mirzo-bobur.jpg" />
       </article>
+
     </div>
   </div>
 </section>
-
 
     <!-- PARTNERS -->
     <section class="section" id="partners" aria-labelledby="partnersTitle">
