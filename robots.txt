@@ -1,4 +1,18 @@
 User-agent: *
 Allow: /
 
+# Make sure images & assets are crawlable
+Allow: /assets/
+Allow: /assets/team/
+Allow: /css/
+Allow: /js/
+Allow: /img/
+
+# If you have admin/dev folders, block them (optional)
+Disallow: /admin/
+Disallow: /private/
+Disallow: /tmp/
+
+# Sitemaps
 Sitemap: https://thegoldenbrainservices.com/sitemap.xml
+Sitemap: https://thegoldenbrainservices.com/sitemap-images.xml
