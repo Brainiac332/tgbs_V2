@@ -131,7 +131,7 @@
 
       <div class="works-grid" id="works-grid" aria-live="polite">
         <!-- Work item (repeat) -->
-        <article class="work-card" data-title="Graphic Design" data-img="GD/2.png" data-desc="Want visuals that make your brand unforgettable? I create striking, on-brand graphic designs that capture attention and communicate your message with impact. From social media creatives and marketing materials to logos and brand identities. I bring your ideas to life through bold, purposeful design. Let’s make your brand stand out with visuals that speak volumes.">
+        <article class="work-card" data-title="Graphic Design" data-img="assets/GD.png" data-desc="Want visuals that make your brand unforgettable? I create striking, on-brand graphic designs that capture attention and communicate your message with impact. From social media creatives and marketing materials to logos and brand identities. I bring your ideas to life through bold, purposeful design. Let’s make your brand stand out with visuals that speak volumes.">
           <div class="work-badge">GD</div>
           <img src="assets/GD.png" alt="Visuals that sell" style="display:block;object-fit:cover;width:100%;height:100%">
           <div class="work-meta">
@@ -140,7 +140,7 @@
           </div>
         </article>
 
-        <article class="work-card" data-title="Social Media Management" data-img="gd/3.png" data-desc="Want to grow your brand with strategic, engaging content? I help brands thrive on social media through data-driven strategies, eye-catching visuals, and compelling storytelling. From content creation and scheduling to community management and analytics, I manage it all to boost your online presence and turn followers into loyal customers. Let’s turn your social platforms into powerful marketing tools.">
+        <article class="work-card" data-title="Social Media Management" data-img="assets/smm.png" data-desc="Want to grow your brand with strategic, engaging content? I help brands thrive on social media through data-driven strategies, eye-catching visuals, and compelling storytelling. From content creation and scheduling to community management and analytics, I manage it all to boost your online presence and turn followers into loyal customers. Let’s turn your social platforms into powerful marketing tools.">
           <div class="work-badge">SMM</div>
           <img src="assets/smm.png" alt="Social Growth" style="display:block;object-fit:cover;width:100%;height:100%">
           <div class="work-meta">
@@ -149,7 +149,7 @@
           </div>
         </article>
 
-        <article class="work-card" data-title="Content Creation" data-img="gd/4.png" data-desc="Looking to stand out with scroll-stopping content? I specialize in creating high-quality, engaging content that captures attention and elevates your brand across all platforms. From dynamic short-form videos to polished YouTube content and campaign visuals. I turn ideas into compelling content that connects with your audience and drives results. Let’s bring your vision to life, one powerful post at a time.">
+        <article class="work-card" data-title="Content Creation" data-img="assets/cc.png" data-desc="Looking to stand out with scroll-stopping content? I specialize in creating high-quality, engaging content that captures attention and elevates your brand across all platforms. From dynamic short-form videos to polished YouTube content and campaign visuals. I turn ideas into compelling content that connects with your audience and drives results. Let’s bring your vision to life, one powerful post at a time.">
           <div class="work-badge">CC</div>
           <img src="assets/cc.png" alt="Sawad I" style="display:block;object-fit:cover;width:100%;height:100%">
           <div class="work-meta">
@@ -419,7 +419,7 @@
       document.getElementById('modal-img').alt = title;
       document.getElementById('modal-desc').textContent = desc;
       document.getElementById('modal-whatsapp').href = 'https://wa.me/971552738118?text=' + encodeURIComponent('Hi TGBS, I saw your ' + title + ' service. I would like to get started.');
-      document.getElementById('modal-email').href = 'mailto:hello@tgbs.com?subject=' + encodeURIComponent('Inquiry — ' + title);
+      document.getElementById('modal-email').href = 'mailto:admin@thegoldenbrainsevices.com?subject=' + encodeURIComponent('Inquiry — ' + title);
       modal.classList.add('open');
       modal.setAttribute('aria-hidden', 'false');
     }
@@ -467,7 +467,7 @@
         const msg = encodeURIComponent(document.getElementById('message').value.trim());
         const subject = encodeURIComponent('New enquiry from portfolio — ' + name);
         const body = encodeURIComponent(`Name: ${decodeURIComponent(name)}\nEmail: ${decodeURIComponent(email)}\n\nMessage:\n${decodeURIComponent(msg)}`);
-        window.location.href = `mailto:hello@tgbs.com?subject=${subject}&body=${body}`;
+        window.location.href = `mailto:admin@thegoldenbrainservices.com?subject=${subject}&body=${body}`;
       });
     }
 
